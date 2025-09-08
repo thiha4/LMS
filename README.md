@@ -10,7 +10,6 @@
 
 ## Auth Endpoints
 - POST /api/v1/auth/register {name,email,password}
-- POST /api/v1/auth/verify-otp {email,code}
 - POST /api/v1/auth/login {email,password}
 - POST /api/v1/auth/logout
 - GET  /api/v1/auth/me   (cookie token required)

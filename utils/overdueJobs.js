@@ -1,8 +1,8 @@
 import Loan from "../models/loanModel.js";
 import User from "../models/userModel.js";
 import Book from "../models/bookModel.js";
-import sendEmail from "./sendEmail.js";
-import { overdueReminderTemplate } from "./emailTemplates.js";
+// import sendEmail from "./sendEmail.js";
+// import { overdueReminderTemplate } from "./emailTemplates.js";
 
 export const sendOverdueReminders = async () => {
   const now = new Date();
@@ -15,11 +15,7 @@ export const sendOverdueReminders = async () => {
       loan.status = "overdue";
       await loan.save();
     }
-    const message = overdueReminderTemplate(loan.user.name, loan.book.title, loan.dueAt);
-    await sendEmail({
-      email: loan.user.email,
-      subject: "Overdue Book Reminder",
-      message,
-    });
+    console.log(`Overdue book found for user: ${user._id}`);
+    console.log("Overdue book found:", book._id);
   }
 };

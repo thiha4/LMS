@@ -1,13 +1,4 @@
-export const generateVerificationOtpEmailTemplate = (verificationCode) => {
-  return `
-    <div style="font-family:Arial,sans-serif">
-      <h2>Library Management System</h2>
-      <p>Use the following OTP to verify your account:</p>
-      <h1>${verificationCode}</h1>
-      <p>This code is valid for 10 minutes.</p>
-    </div>
-  `;
-};
+
 
 export const resetPasswordEmailTemplate = (link) => {
   return `
