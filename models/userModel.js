@@ -26,8 +26,8 @@ const userSchema = new mongoose.Schema({
     enum: ["admin", "member"],
     default: "member",
   },
-  isVerified: { type: Boolean, default: false },
-  verificationCode: { type: String },
+  // isVerified: { type: Boolean, default: false },
+  // verificationCode: { type: String },
   resetPasswordToken: String,
   resetPasswordExpire: Date
 }, { timestamps: true });
@@ -48,10 +48,10 @@ userSchema.methods.comparePassword = async function(enteredPassword) {
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
-userSchema.methods.generateVerificationCode = function() {
-  const code = Math.floor(100000 + Math.random() * 900000).toString();
-  this.verificationCode = code;
-  return code;
-};
+// userSchema.methods.generateVerificationCode = function() {
+//   const code = Math.floor(100000 + Math.random() * 900000).toString();
+//   this.verificationCode = code;
+//   return code;
+// };
 
 export default mongoose.model("User", userSchema);

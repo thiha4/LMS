@@ -1,8 +1,8 @@
 import User from "../models/userModel.js";
 import catchAsyncErrors from "../middlewares/catchAsyncErrors.js";
 import ErrorHandler from "../utils/errorHandler.js";
-import { sendVerificationCode } from "../utils/sendVerificationCode.js";
-import sendEmail from "../utils/sendEmail.js";
+// import { sendVerificationCode } from "../utils/sendVerificationCode.js";
+// import sendEmail from "../utils/sendEmail.js";
 import { resetPasswordEmailTemplate } from "../utils/emailTemplates.js";
 import crypto from "crypto";
 
@@ -28,26 +28,9 @@ export const register = catchAsyncErrors(async (req, res, next) => {
   if (user) return next(new ErrorHandler("User already exists", 400));
 
   user = await User.create({ name, email, password });
-  const code = user.generateVerificationCode();
   await user.save();
 
-  await sendVerificationCode(user, code);
-
-  res.status(201).json({ success: true, message: "Registered. Please verify your email OTP." });
-});
-
-export const verifyOtp = catchAsyncErrors(async (req, res, next) => {
-  const { email, code } = req.body;
-  const user = await User.findOne({ email }).select("+verificationCode");
-  if (!user) return next(new ErrorHandler("User not found", 404));
-  if (user.isVerified) return res.json({ success: true, message: "Already verified" });
-  if (user.verificationCode !== code) return next(new ErrorHandler("Invalid OTP", 400));
-
-  user.isVerified = true;
-  user.verificationCode = undefined;
-  await user.save();
-
-  res.json({ success: true, message: "Account verified successfully" });
+  res.status(201).json({ success: true, message: "Registered successfully" });
 });
 
 export const login = catchAsyncErrors(async (req, res, next) => {
@@ -58,7 +41,7 @@ export const login = catchAsyncErrors(async (req, res, next) => {
   if (!user) return next(new ErrorHandler("Invalid email or password", 401));
   const isMatch = await user.comparePassword(password);
   if (!isMatch) return next(new ErrorHandler("Invalid email or password", 401));
-  if (!user.isVerified) return next(new ErrorHandler("Please verify your account first", 403));
+  // if (!user.isVerified) return next(new ErrorHandler("Please verify your account first", 403));
 
   sendToken(user, 200, res, "Login successful");
 });
@@ -92,15 +75,15 @@ export const forgotPassword = catchAsyncErrors(async (req, res, next) => {
   const link = `${resetUrl || process.env.FRONTEND_URL}/reset-password/${resetToken}`;
   const message = resetPasswordEmailTemplate(link);
 
-  try {
-    await sendEmail({ email: user.email, subject: "Password Reset", message });
-    res.json({ success: true, message: "Email sent for password reset" });
-  } catch (err) {
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpire = undefined;
-    await user.save();
-    return next(new ErrorHandler("Email could not be sent", 500));
-  }
+  // try {
+  //   await sendEmail({ email: user.email, subject: "Password Reset", message });
+  //   res.json({ success: true, message: "Email sent for password reset" });
+  // } catch (err) {
+  //   user.resetPasswordToken = undefined;
+  //   user.resetPasswordExpire = undefined;
+  //   await user.save();
+  //   return next(new ErrorHandler("Email could not be sent", 500));
+  // }
 });
 
 export const resetPassword = catchAsyncErrors(async (req, res, next) => {
